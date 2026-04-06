@@ -13,7 +13,7 @@ const Logo = ({ size = "md" }: { size?: "sm" | "md" | "lg" }) => {
         <Leaf className="text-primary-foreground" size={sizes[size].icon} />
       </div>
       <span className={`${sizes[size].text} font-bold text-foreground`}>
-        Conecta<span className="text-primary">ONG</span>
+        Impact<span className="text-primary"> Hub</span>
       </span>
     </div>
   );

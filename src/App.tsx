@@ -8,6 +8,8 @@ import Register from "./pages/Register.tsx";
 import Home from "./pages/Home.tsx";
 import SearchONGs from "./pages/SearchONGs.tsx";
 import NotFound from "./pages/NotFound.tsx";
+import ForgotPassword from "./pages/ForgotPassword.tsx";
+import Notifications from "./pages/Notifications.tsx";
 
 const queryClient = new QueryClient();
 
@@ -22,8 +24,9 @@ const App = () => (
           <Route path="/cadastro" element={<Register />} />
           <Route path="/home" element={<Home />} />
           <Route path="/buscar" element={<SearchONGs />} />
-          <Route path="/notificacoes" element={<Home />} />
+          <Route path="/notificacoes" element={<Notifications />} />
           <Route path="/perfil" element={<Home />} />
+          <Route path="/recuperar-senha" element={<ForgotPassword />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

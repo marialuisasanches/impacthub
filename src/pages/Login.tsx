@@ -10,16 +10,34 @@ import { Leaf } from "lucide-react";
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [errors, setErrors] = useState<{ email?: string; password?: string }>(
+    {},
+  );
   const navigate = useNavigate();
+
+  const validate = () => {
+    const newErrors: { email?: string; password?: string } = {};
+    if (!email) newErrors.email = "E-mail é obrigatório";
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))
+      newErrors.email = "E-mail inválido";
+    if (!password) newErrors.password = "Senha é obrigatória";
+    else if (password.length < 6)
+      newErrors.password = "Senha deve ter pelo menos 6 caracteres";
+    return newErrors;
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    const newErrors = validate();
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      return;
+    }
     navigate("/home");
   };
 
   return (
     <div className="min-h-screen flex items-center justify-center px-4 relative overflow-hidden">
-      {/* Decorative elements */}
       <div className="absolute top-10 left-10 opacity-10">
         <Leaf size={120} className="text-primary" />
       </div>
@@ -48,9 +66,15 @@ const Login = () => {
                 type="email"
                 placeholder="seu@email.com"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="focus-visible:ring-primary"
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                  setErrors((prev) => ({ ...prev, email: undefined }));
+                }}
+                className={`focus-visible:ring-primary ${errors.email ? "border-red-500" : ""}`}
               />
+              {errors.email && (
+                <p className="text-red-500 text-xs">{errors.email}</p>
+              )}
             </div>
 
             <div className="space-y-2">
@@ -60,19 +84,39 @@ const Login = () => {
                 type="password"
                 placeholder="••••••••"
                 value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="focus-visible:ring-primary"
+                onChange={(e) => {
+                  setPassword(e.target.value);
+                  setErrors((prev) => ({ ...prev, password: undefined }));
+                }}
+                className={`focus-visible:ring-primary ${errors.password ? "border-red-500" : ""}`}
               />
+              {errors.password && (
+                <p className="text-red-500 text-xs">{errors.password}</p>
+              )}
+            </div>
+            <div className="text-right">
+              <Link
+                to="/recuperar-senha"
+                className="text-xs text-primary hover:underline"
+              >
+                Esqueceu a senha?
+              </Link>
             </div>
 
-            <Button type="submit" className="w-full rounded-full text-base h-11">
+            <Button
+              type="submit"
+              className="w-full rounded-full text-base h-11"
+            >
               Entrar
             </Button>
           </form>
 
           <p className="text-center text-sm text-muted-foreground mt-6">
             Não tem conta?{" "}
-            <Link to="/cadastro" className="text-primary font-medium hover:underline">
+            <Link
+              to="/cadastro"
+              className="text-primary font-medium hover:underline"
+            >
               Cadastre-se
             </Link>
           </p>

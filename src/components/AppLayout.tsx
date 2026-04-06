@@ -19,22 +19,22 @@ const AppLayout = ({ children }: { children: ReactNode }) => {
     <div className="min-h-screen flex flex-col">
       {/* Top Nav */}
       <header className="sticky top-0 z-50 bg-card border-b shadow-sm">
-        <div className="max-w-6xl mx-auto flex items-center gap-4 px-4 h-14">
+        <div className="w-full flex items-center gap-4 px-4 h-14">
           <Link to="/home">
             <Logo size="sm" />
           </Link>
-          <div className="flex-1 max-w-md hidden sm:block">
-            <Input placeholder="Buscar ONGs, causas..." className="rounded-full bg-muted/50 border-0 focus-visible:ring-primary" />
-          </div>
-          <Avatar className="w-8 h-8 cursor-pointer">
-            <AvatarFallback className="bg-primary/10 text-primary text-xs font-semibold">U</AvatarFallback>
+          <div className="flex-1" />
+          <Avatar className="w-8 h-8 cursor-pointer ml-auto">
+            <AvatarFallback className="bg-primary/10 text-primary text-xs font-semibold">
+              U
+            </AvatarFallback>
           </Avatar>
         </div>
       </header>
 
-      <div className="flex-1 flex max-w-6xl mx-auto w-full">
+      <div className="flex-1 flex w-full">
         {/* Desktop Sidebar */}
-        <aside className="hidden md:flex flex-col w-56 shrink-0 p-4 gap-1 sticky top-14 h-[calc(100vh-3.5rem)]">
+        <aside className="hidden md:flex flex-col w-56 shrink-0 p-4 gap-1 sticky top-14 h-[calc(100vh-3.5rem)] ml-4">
           {navItems.map((item) => {
             const active = location.pathname === item.path;
             return (
@@ -55,9 +55,7 @@ const AppLayout = ({ children }: { children: ReactNode }) => {
         </aside>
 
         {/* Main Content */}
-        <main className="flex-1 px-4 py-6 pb-20 md:pb-6">
-          {children}
-        </main>
+        <main className="flex-1 px-4 py-6 pb-20 md:pb-6">{children}</main>
       </div>
 
       {/* Mobile Bottom Tab */}

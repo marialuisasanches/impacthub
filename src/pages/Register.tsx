@@ -7,14 +7,53 @@ import { Label } from "@/components/ui/label";
 import Logo from "@/components/Logo";
 import { Leaf } from "lucide-react";
 
+type Errors = {
+  name?: string;
+  email?: string;
+  password?: string;
+  confirmPassword?: string;
+  ongName?: string;
+};
+
 const Register = () => {
   const [userType, setUserType] = useState<"voluntario" | "ong">("voluntario");
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [ongName, setOngName] = useState("");
+  const [errors, setErrors] = useState<Errors>({});
   const navigate = useNavigate();
+
+  const validate = () => {
+    const newErrors: Errors = {};
+    if (!name.trim()) newErrors.name = "Nome é obrigatório";
+    if (!email) newErrors.email = "E-mail é obrigatório";
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))
+      newErrors.email = "E-mail inválido";
+    if (!password) newErrors.password = "Senha é obrigatória";
+    else if (password.length < 6)
+      newErrors.password = "Senha deve ter pelo menos 6 caracteres";
+    if (!confirmPassword) newErrors.confirmPassword = "Confirme sua senha";
+    else if (password !== confirmPassword)
+      newErrors.confirmPassword = "As senhas não coincidem";
+    if (userType === "ong" && !ongName.trim())
+      newErrors.ongName = "Nome da ONG é obrigatório";
+    return newErrors;
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    const newErrors = validate();
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      return;
+    }
     navigate("/home");
   };
+
+  const clearError = (field: keyof Errors) =>
+    setErrors((prev) => ({ ...prev, [field]: undefined }));
 
   return (
     <div className="min-h-screen flex items-center justify-center px-4 py-8 relative overflow-hidden">
@@ -38,22 +77,73 @@ const Register = () => {
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="name">Nome completo</Label>
-              <Input id="name" placeholder="Seu nome" className="focus-visible:ring-primary" />
+              <Input
+                id="name"
+                placeholder="Seu nome"
+                value={name}
+                onChange={(e) => {
+                  setName(e.target.value);
+                  clearError("name");
+                }}
+                className={`focus-visible:ring-primary ${errors.name ? "border-red-500" : ""}`}
+              />
+              {errors.name && (
+                <p className="text-red-500 text-xs">{errors.name}</p>
+              )}
             </div>
 
             <div className="space-y-2">
               <Label htmlFor="reg-email">E-mail</Label>
-              <Input id="reg-email" type="email" placeholder="seu@email.com" className="focus-visible:ring-primary" />
+              <Input
+                id="reg-email"
+                type="email"
+                placeholder="seu@email.com"
+                value={email}
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                  clearError("email");
+                }}
+                className={`focus-visible:ring-primary ${errors.email ? "border-red-500" : ""}`}
+              />
+              {errors.email && (
+                <p className="text-red-500 text-xs">{errors.email}</p>
+              )}
             </div>
 
             <div className="space-y-2">
               <Label htmlFor="reg-password">Senha</Label>
-              <Input id="reg-password" type="password" placeholder="••••••••" className="focus-visible:ring-primary" />
+              <Input
+                id="reg-password"
+                type="password"
+                placeholder="••••••••"
+                value={password}
+                onChange={(e) => {
+                  setPassword(e.target.value);
+                  clearError("password");
+                }}
+                className={`focus-visible:ring-primary ${errors.password ? "border-red-500" : ""}`}
+              />
+              {errors.password && (
+                <p className="text-red-500 text-xs">{errors.password}</p>
+              )}
             </div>
 
             <div className="space-y-2">
               <Label htmlFor="confirm-password">Confirmar senha</Label>
-              <Input id="confirm-password" type="password" placeholder="••••••••" className="focus-visible:ring-primary" />
+              <Input
+                id="confirm-password"
+                type="password"
+                placeholder="••••••••"
+                value={confirmPassword}
+                onChange={(e) => {
+                  setConfirmPassword(e.target.value);
+                  clearError("confirmPassword");
+                }}
+                className={`focus-visible:ring-primary ${errors.confirmPassword ? "border-red-500" : ""}`}
+              />
+              {errors.confirmPassword && (
+                <p className="text-red-500 text-xs">{errors.confirmPassword}</p>
+              )}
             </div>
 
             <div className="space-y-2">
@@ -81,11 +171,26 @@ const Register = () => {
             {userType === "ong" && (
               <div className="space-y-2 animate-in fade-in slide-in-from-top-2">
                 <Label htmlFor="ong-name">Nome da ONG</Label>
-                <Input id="ong-name" placeholder="Nome da organização" className="focus-visible:ring-primary" />
+                <Input
+                  id="ong-name"
+                  placeholder="Nome da organização"
+                  value={ongName}
+                  onChange={(e) => {
+                    setOngName(e.target.value);
+                    clearError("ongName");
+                  }}
+                  className={`focus-visible:ring-primary ${errors.ongName ? "border-red-500" : ""}`}
+                />
+                {errors.ongName && (
+                  <p className="text-red-500 text-xs">{errors.ongName}</p>
+                )}
               </div>
             )}
 
-            <Button type="submit" className="w-full rounded-full text-base h-11">
+            <Button
+              type="submit"
+              className="w-full rounded-full text-base h-11"
+            >
               Criar conta
             </Button>
           </form>
